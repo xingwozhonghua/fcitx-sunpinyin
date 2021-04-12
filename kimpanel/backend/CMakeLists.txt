@@ -1,0 +1,18 @@
+include_directories (
+    ${PROJECT_BINARY_DIR}
+    ${FCITX4_FCITX_UTILS_INCLUDE_DIRS}
+    ${FCITX4_FCITX_CONFIG_INCLUDE_DIRS}
+    ${FCITX4_FCITX_INCLUDE_DIRS}
+    ${DBUS_INCLUDE_DIR}
+    ${DBUS_ARCH_INCLUDE_DIR}
+    )
+
+set(FCITX_KIMPANEL_UI_SOURCES
+  backend.c
+  )
+
+fcitx_add_addon_full(kimpanel-ui
+SOURCES ${FCITX_KIMPANEL_UI_SOURCES}
+CONF_SRC fcitx-kimpanel-ui.conf
+LINK_LIBS ${DBUS_LIBRARIES}
+)

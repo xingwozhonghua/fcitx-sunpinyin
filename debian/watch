@@ -1,0 +1,4 @@
+version=4
+opts="" \
+ https://download.fcitx-im.org/fcitx-sunpinyin/ \
+ fcitx-sunpinyin-?(\d[\d.]*)@ARCHIVE_EXT@ debian uupdate
