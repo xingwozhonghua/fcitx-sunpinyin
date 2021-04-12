@@ -39,7 +39,7 @@
 #include "fcitx-utils/utils.h"
 #include "fcitx/candidate.h"
 
-#define FCITX_KIMPANEL_INTERFACE "org.kde.kimpanel.inputmethod"
+#define FCITX_KIMPANEL_INTERFACE "org.dde.kimpanel.inputmethod"
 #define FCITX_KIMPANEL_PATH "/kimpanel"
 
 #define GetMenuItem(m, i) ((FcitxMenuItem*) utarray_eltptr(&(m)->shell, (i)))
@@ -321,7 +321,7 @@ void* KimpanelCreate(FcitxInstance* instance)
 
         // add a rule to receive signals from kimpanel
         dbus_bus_add_match(kimpanel->conn,
-                           "type='signal',sender='org.kde.impanel',interface='org.kde.impanel'",
+                           "type='signal',sender='org.dde.impanel',interface='org.dde.impanel'",
                            &err);
         dbus_connection_flush(kimpanel->conn);
         if (dbus_error_is_set(&err)) {
@@ -329,7 +329,7 @@ void* KimpanelCreate(FcitxInstance* instance)
             break;
         }
         dbus_bus_add_match(kimpanel->conn,
-                           "type='signal',sender='org.kde.impanel',interface='org.kde.impanel2'",
+                           "type='signal',sender='org.dde.impanel',interface='org.dde.impanel2'",
                            &err);
         dbus_connection_flush(kimpanel->conn);
         if (dbus_error_is_set(&err)) {
@@ -337,7 +337,7 @@ void* KimpanelCreate(FcitxInstance* instance)
             break;
         }
 
-        int id = FcitxDBusWatchName(instance, "org.kde.impanel", kimpanel,
+        int id = FcitxDBusWatchName(instance, "org.dde.impanel", kimpanel,
                                     KimpanelOwnerChanged, NULL, NULL);
         if (id == 0) {
             break;
@@ -360,7 +360,7 @@ void* KimpanelCreate(FcitxInstance* instance)
         imchangehk.func = KimpanelInputIMChanged;
         FcitxInstanceRegisterIMChangedHook(instance, imchangehk);
 
-        const char* kimpanelServiceName = "org.kde.impanel";
+        const char* kimpanelServiceName = "org.dde.impanel";
         DBusMessage* message = dbus_message_new_method_call(DBUS_SERVICE_DBUS, DBUS_PATH_DBUS, DBUS_INTERFACE_DBUS, "NameHasOwner");
         dbus_message_append_args(message, DBUS_TYPE_STRING, &kimpanelServiceName, DBUS_TYPE_INVALID);
 
@@ -740,14 +740,14 @@ DBusHandlerResult KimpanelDBusFilter(DBusConnection* connection, DBusMessage* ms
     FcitxInputState* input = FcitxInstanceGetInputState(kimpanel->owner);
     int int0;
     const char* s0 = NULL;
-    if (dbus_message_is_signal(msg, "org.kde.impanel", "MovePreeditCaret")) {
+    if (dbus_message_is_signal(msg, "org.dde.impanel", "MovePreeditCaret")) {
         FcitxLog(DEBUG, "MovePreeditCaret");
         DBusError error;
         dbus_error_init(&error);
         dbus_message_get_args(msg, &error, DBUS_TYPE_INT32, &int0 , DBUS_TYPE_INVALID);
         dbus_error_free(&error);
         return DBUS_HANDLER_RESULT_HANDLED;
-    } else if (dbus_message_is_signal(msg, "org.kde.impanel", "SelectCandidate")) {
+    } else if (dbus_message_is_signal(msg, "org.dde.impanel", "SelectCandidate")) {
         FcitxLog(DEBUG, "SelectCandidate: ");
         DBusError error;
         dbus_error_init(&error);
@@ -756,21 +756,21 @@ DBusHandlerResult KimpanelDBusFilter(DBusConnection* connection, DBusMessage* ms
         }
         dbus_error_free(&error);
         return DBUS_HANDLER_RESULT_HANDLED;
-    } else if (dbus_message_is_signal(msg, "org.kde.impanel", "LookupTablePageUp")) {
+    } else if (dbus_message_is_signal(msg, "org.dde.impanel", "LookupTablePageUp")) {
         FcitxLog(DEBUG, "LookupTablePageUp");
         if (FcitxCandidateWordPageCount(FcitxInputStateGetCandidateList(input)) != 0) {
             FcitxCandidateWordGoPrevPage(FcitxInputStateGetCandidateList(input));
             FcitxInstanceProcessInputReturnValue(instance, IRV_DISPLAY_CANDWORDS);
         }
         return DBUS_HANDLER_RESULT_HANDLED;
-    } else if (dbus_message_is_signal(msg, "org.kde.impanel", "LookupTablePageDown")) {
+    } else if (dbus_message_is_signal(msg, "org.dde.impanel", "LookupTablePageDown")) {
         FcitxLog(DEBUG, "LookupTablePageDown");
         if (FcitxCandidateWordPageCount(FcitxInputStateGetCandidateList(input)) != 0) {
             FcitxCandidateWordGoNextPage(FcitxInputStateGetCandidateList(input));
             FcitxInstanceProcessInputReturnValue(instance, IRV_DISPLAY_CANDWORDS);
         }
         return DBUS_HANDLER_RESULT_HANDLED;
-    } else if (dbus_message_is_signal(msg, "org.kde.impanel", "TriggerProperty")) {
+    } else if (dbus_message_is_signal(msg, "org.dde.impanel", "TriggerProperty")) {
         FcitxLog(DEBUG, "TriggerProperty: ");
         DBusError error;
         dbus_error_init(&error);
@@ -863,13 +863,13 @@ DBusHandlerResult KimpanelDBusFilter(DBusConnection* connection, DBusMessage* ms
         }
         dbus_error_free(&error);
         return DBUS_HANDLER_RESULT_HANDLED;
-    } else if (dbus_message_is_signal(msg, "org.kde.impanel", "PanelCreated")) {
+    } else if (dbus_message_is_signal(msg, "org.dde.impanel", "PanelCreated")) {
         FcitxLog(DEBUG, "PanelCreated");
         FcitxUIResumeFromFallback(instance);
         KimpanelReset(kimpanel);
         KimpanelRegisterAllStatus(kimpanel);
         return DBUS_HANDLER_RESULT_HANDLED;
-    } else if (dbus_message_is_signal(msg, "org.kde.impanel2", "PanelCreated2")) {
+    } else if (dbus_message_is_signal(msg, "org.dde.impanel2", "PanelCreated2")) {
         FcitxLog(DEBUG, "PanelCreated2");
         FcitxUIResumeFromFallback(instance);
         kimpanel->version = 2;
@@ -877,19 +877,19 @@ DBusHandlerResult KimpanelDBusFilter(DBusConnection* connection, DBusMessage* ms
         KimpanelRegisterAllStatus(kimpanel);
         KimpanelIntrospect(kimpanel);
         return DBUS_HANDLER_RESULT_HANDLED;
-    } else if (dbus_message_is_signal(msg, "org.kde.impanel", "Exit")) {
+    } else if (dbus_message_is_signal(msg, "org.dde.impanel", "Exit")) {
         FcitxLog(DEBUG, "Exit");
         FcitxInstanceEnd(instance);
         return DBUS_HANDLER_RESULT_HANDLED;
-    } else if (dbus_message_is_signal(msg, "org.kde.impanel", "ReloadConfig")) {
+    } else if (dbus_message_is_signal(msg, "org.dde.impanel", "ReloadConfig")) {
         FcitxLog(DEBUG, "ReloadConfig");
         FcitxInstanceReloadConfig(instance);
         return DBUS_HANDLER_RESULT_HANDLED;
-    } else if (dbus_message_is_signal(msg, "org.kde.impanel", "Restart")) {
+    } else if (dbus_message_is_signal(msg, "org.dde.impanel", "Restart")) {
         FcitxLog(DEBUG, "Restart");
         FcitxInstanceRestart(instance);
         return DBUS_HANDLER_RESULT_HANDLED;
-    } else if (dbus_message_is_signal(msg, "org.kde.impanel", "Configure")) {
+    } else if (dbus_message_is_signal(msg, "org.dde.impanel", "Configure")) {
         FcitxLog(DEBUG, "Configure");
         fcitx_utils_launch_configure_tool();
         return DBUS_HANDLER_RESULT_HANDLED;
@@ -901,7 +901,7 @@ DBusHandlerResult KimpanelDBusFilter(DBusConnection* connection, DBusMessage* ms
 void KimpanelOwnerChanged(void* user_data, void* arg, const char* serviceName, const char* oldName, const char* newName) {
     FcitxKimpanelUI* kimpanel = (FcitxKimpanelUI*) user_data;
     /* old die and no new one */
-    if (strcmp(serviceName, "org.kde.impanel") == 0) {
+    if (strcmp(serviceName, "org.dde.impanel") == 0) {
         if (strlen(oldName) > 0 && strlen(newName) == 0) {
             FcitxUISwitchToFallback(kimpanel->owner);
         }
@@ -1333,9 +1333,9 @@ void KimSetLookupTable(FcitxKimpanelUI* kimpanel,
     DBusMessageIter args;
 
     // create a signal and check for errors
-    msg = dbus_message_new_method_call("org.kde.impanel",
-                                       "/org/kde/impanel",
-                                       "org.kde.impanel2",
+    msg = dbus_message_new_method_call("org.dde.impanel",
+                                       "/org/dde/impanel",
+                                       "org.dde.impanel2",
                                        "SetLookupTable"); // name of the signal
     if (NULL == msg) {
         FcitxLog(DEBUG, "Message Null");
@@ -1553,9 +1553,9 @@ void KimSetSpotRect(FcitxKimpanelUI* kimpanel, int x, int y, int w, int h, boole
     boolean useRelative = kimpanel->hasSetRelativeSpotRect && relative;
 
     // create a signal and check for errors
-    msg = dbus_message_new_method_call("org.kde.impanel",
-                                       "/org/kde/impanel",
-                                       "org.kde.impanel2",
+    msg = dbus_message_new_method_call("org.dde.impanel",
+                                       "/org/dde/impanel",
+                                       "org.dde.impanel2",
                                        useRelative ? "SetRelativeSpotRect" : "SetSpotRect"); // name of the signal
     if (NULL == msg) {
         FcitxLog(DEBUG, "Message Null");
@@ -1669,8 +1669,8 @@ void KimpanelServiceExistCallback(DBusPendingCall *call, void *data)
 
 void KimpanelIntrospect(FcitxKimpanelUI* kimpanel)
 {
-    const char* kimpanelServiceName = "org.kde.impanel";
-    DBusMessage* message = dbus_message_new_method_call(kimpanelServiceName, "/org/kde/impanel", DBUS_INTERFACE_INTROSPECTABLE, "Introspect");
+    const char* kimpanelServiceName = "org.dde.impanel";
+    DBusMessage* message = dbus_message_new_method_call(kimpanelServiceName, "/org/dde/impanel", DBUS_INTERFACE_INTROSPECTABLE, "Introspect");
 
     DBusPendingCall *call = NULL;
     dbus_bool_t reply =
@@ -1696,7 +1696,7 @@ void KimpanelIntrospectCallback(DBusPendingCall *call, void *data)
         dbus_error_init(&error);
         if (dbus_message_get_args(msg, &error, DBUS_TYPE_STRING, &s,
                                   DBUS_TYPE_INVALID)) {
-            if (strstr(s, "org.kde.impanel2")) {
+            if (strstr(s, "org.dde.impanel2")) {
                 kimpanel->version = 2;
                 if (strstr(s, "SetLookupTable")) {
                     kimpanel->hasSetLookupTable = true;
@@ -1730,10 +1730,10 @@ void KimpanelDestroy(void* arg)
     dbus_connection_remove_filter(kimpanel->conn, KimpanelDBusFilter, kimpanel);
 
     dbus_bus_remove_match(kimpanel->conn,
-                          "type='signal',sender='org.kde.impanel',interface='org.kde.impanel'",
+                          "type='signal',sender='org.dde.impanel',interface='org.dde.impanel'",
                            NULL);
     dbus_bus_remove_match(kimpanel->conn,
-                          "type='signal',sender='org.kde.impanel',interface='org.kde.impanel2'",
+                          "type='signal',sender='org.dde.impanel',interface='org.dde.impanel2'",
                           NULL);
 
     dbus_connection_flush(kimpanel->conn);

@@ -1,6 +1,6 @@
 <!DOCTYPE node PUBLIC "-//freedesktop//DTD D-BUS Object Introspection 1.0//EN" "http://www.freedesktop.org/standards/dbus/1.0/introspect.dtd">
-<node name="/org/kde/impanel">
-        <interface name="org.kde.impanel">
+<node name="/org/dde/impanel">
+        <interface name="org.dde.impanel">
                 <signal name="MovePreeditCaret">
                         <arg type="i" name="position" />
                 </signal>
@@ -17,7 +17,7 @@
                 <signal name="ReloadConfig"> </signal>
                 <signal name="Configure"> </signal>
         </interface>
-        <interface name="org.kde.impanel2">
+        <interface name="org.dde.impanel2">
             <signal name="PanelCreated2"> </signal>
             <method name="SetSpotRect">
                 <arg type="i" name="x" direction="in" />

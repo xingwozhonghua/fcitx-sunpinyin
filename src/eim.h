@@ -81,6 +81,7 @@ INPUT_RETURN_VALUE FcitxSunpinyinGetCandWord (void *arg, FcitxCandidateWord* can
 boolean FcitxSunpinyinInit(void*);
 void ReloadConfigFcitxSunpinyin(void*);
 void FcitxSunpinyinSave(void*);
+int CloseImpanelUi();
 
 typedef struct FcitxSunpinyin
 {
