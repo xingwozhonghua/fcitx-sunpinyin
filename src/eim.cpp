@@ -377,11 +377,11 @@ INPUT_RETURN_VALUE FcitxSunpinyinGetCandWord (void* arg, FcitxCandidateWord* can
  **/
 void* FcitxSunpinyinCreate (FcitxInstance* instance)
 {
-    char* args[] = {
-        "/usr/local/bin/fcitx-qimpanel",
-        NULL
-    };
-    fcitx_utils_start_process(args);
+//    char* args[] = {
+//        "/usr/local/bin/fcitx-qimpanel",
+//        NULL
+//    };
+//    fcitx_utils_start_process(args);
 
     FcitxSunpinyin* sunpinyin = (FcitxSunpinyin*) fcitx_utils_malloc0(sizeof(FcitxSunpinyin));
     FcitxAddon* addon = FcitxAddonsGetAddonByName(FcitxInstanceGetAddons(instance), "fcitx-sunpinyin");
@@ -474,8 +474,8 @@ void FcitxSunpinyinDestroy (void* arg)
     if (sunpinyin->windowHandler)
         delete sunpinyin->windowHandler;
 
-    //close fcitx-qimpanel
-    CloseImpanelUi();
+//    close fcitx-qimpanel
+//    CloseImpanelUi();
     free(arg);
 }
 

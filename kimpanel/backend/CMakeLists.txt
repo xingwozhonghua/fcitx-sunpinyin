@@ -7,12 +7,12 @@ include_directories (
     ${DBUS_ARCH_INCLUDE_DIR}
     )
 
-set(FCITX_KIMPANEL_UI_SOURCES
+set(FCITX_UOSKIMPANEL_UI_SOURCES
   backend.c
   )
 
-fcitx_add_addon_full(kimpanel-ui
-SOURCES ${FCITX_KIMPANEL_UI_SOURCES}
-CONF_SRC fcitx-kimpanel-ui.conf
+fcitx_add_addon_full(uoskimpanel-ui
+SOURCES ${FCITX_UOSKIMPANEL_UI_SOURCES}
+CONF_SRC fcitx-uoskimpanel-ui.conf
 LINK_LIBS ${DBUS_LIBRARIES}
 )

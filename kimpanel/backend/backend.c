@@ -192,7 +192,7 @@ static void KimpanelIntrospectCallback(DBusPendingCall *call, void *data);
 #  define DBUS_TIMEOUT_USE_DEFAULT (-1)
 #endif
 
-FCITX_DEFINE_PLUGIN(fcitx_kimpanel_ui, ui, FcitxUI) = {
+FCITX_DEFINE_PLUGIN(fcitx_uoskimpanel_ui, ui, FcitxUI) = {
     KimpanelCreate,
     KimpanelCloseInputWindow,
     KimpanelShowInputWindow,
@@ -304,7 +304,7 @@ void* KimpanelCreate(FcitxInstance* instance)
 {
     FcitxKimpanelUI *kimpanel = fcitx_utils_malloc0(sizeof(FcitxKimpanelUI));
 
-    kimpanel->addon = FcitxAddonsGetAddonByName(FcitxInstanceGetAddons(instance), "fcitx-kimpanel-ui");
+    kimpanel->addon = FcitxAddonsGetAddonByName(FcitxInstanceGetAddons(instance), "fcitx-uoskimpanel-ui");
     kimpanel->lastCursor = -2;
     kimpanel->version = 1;
     kimpanel->iCursorPos = 0;
