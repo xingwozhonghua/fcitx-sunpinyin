@@ -26,6 +26,8 @@
 #include <fcitx-config/fcitx-config.h>
 #include <fcitx/instance.h>
 #include <fcitx/candidate.h>
+#include "bus.h"
+#include "common.h"
 
 #define _(x) dgettext("fcitx-sunpinyin", (x))
 
@@ -81,7 +83,6 @@ INPUT_RETURN_VALUE FcitxSunpinyinGetCandWord (void *arg, FcitxCandidateWord* can
 boolean FcitxSunpinyinInit(void*);
 void ReloadConfigFcitxSunpinyin(void*);
 void FcitxSunpinyinSave(void*);
-int CloseImpanelUi();
 
 typedef struct FcitxSunpinyin
 {
@@ -100,6 +101,13 @@ typedef struct FcitxSunpinyin
     boolean bShuangpin;
     CGetFullPunctOp* puncOp;
 } FcitxSunpinyin;
+
+typedef struct _FcitxSunPinyinAddonInstance {
+    FcitxSunpinyinConfig config;
+    FcitxSunpinyin* pinyin;
+    FcitxInstance* owner;
+    FcitxSunPinyinBus* bus;
+} FcitxSunPinyinAddonInstance;
 
 #endif
 // kate: indent-mode cstyle; space-indent on; indent-width 0;

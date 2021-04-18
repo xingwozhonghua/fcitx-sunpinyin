@@ -377,12 +377,6 @@ INPUT_RETURN_VALUE FcitxSunpinyinGetCandWord (void* arg, FcitxCandidateWord* can
  **/
 void* FcitxSunpinyinCreate (FcitxInstance* instance)
 {
-//    char* args[] = {
-//        "/usr/local/bin/fcitx-qimpanel",
-//        NULL
-//    };
-//    fcitx_utils_start_process(args);
-
     FcitxSunpinyin* sunpinyin = (FcitxSunpinyin*) fcitx_utils_malloc0(sizeof(FcitxSunpinyin));
     FcitxAddon* addon = FcitxAddonsGetAddonByName(FcitxInstanceGetAddons(instance), "fcitx-sunpinyin");
     bindtextdomain("fcitx-sunpinyin", LOCALEDIR);
@@ -453,8 +447,6 @@ void* FcitxSunpinyinCreate (FcitxInstance* instance)
     FcitxModuleAddFunction(addon, SunpinyinGetFullPinyin);
     FcitxModuleAddFunction(addon, SunpinyinAddWord);
 
-    //open fcitx-qimpanel
-
     return sunpinyin;
 }
 
@@ -474,8 +466,6 @@ void FcitxSunpinyinDestroy (void* arg)
     if (sunpinyin->windowHandler)
         delete sunpinyin->windowHandler;
 
-//    close fcitx-qimpanel
-//    CloseImpanelUi();
     free(arg);
 }
 
@@ -710,34 +700,4 @@ void* SunpinyinAddWord(void* arg, FcitxModuleFunctionArg args)
     return NULL;
 }
 
-int CloseImpanelUi()
-{
-    FILE *fp;
-    int pid;
-    char unused[150];
-    char buf[150];
-    char command[150];
-
-    sprintf(command,
-            "ps -ef | grep /usr/local/bin/fcitx-qimpanel | grep -v grep");
-
-    if ((fp = popen(command, "r")) == NULL)
-        return 0;
-
-    if ((fgets(buf, 150, fp)) != NULL) {
-        sscanf(buf, "%s\t%d\t%s", unused, &pid, unused);
-    }
-    pclose(fp);
-
-    if(pid == 32767)
-        return 0;
-
-    sprintf(command, "kill -9 %d", pid);
-
-    if ((fp = popen(command, "r")) == NULL)
-        return 0;
-
-    pclose(fp);
-    return 1;
-}
 // kate: indent-mode cstyle; space-indent on; indent-width 0;

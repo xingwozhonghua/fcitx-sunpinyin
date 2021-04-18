@@ -1,0 +1,8 @@
+#ifndef FCITX_SUNPINYIN_COMMON_H
+#define FCITX_SUNPINYIN_COMMON_H
+
+
+#define FCITX_SUNPINYIN_PATH "/sunpinyin"
+#define FCITX_SUNPINYIN_INTERFACE "org.fcitx.Fcitx.SunPinyin"
+
+#endif // FCITX_LIBPINYIN_COMMON_H

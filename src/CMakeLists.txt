@@ -10,6 +10,7 @@ include_directories(
 link_directories(${SUNPINYIN_LIBRARY_DIRS})
 
 set(fcitx_sunpinyin_sources
+  bus.cpp
   eim.cpp
   handler.cpp
   config.cpp
@@ -21,5 +22,5 @@ fcitx_add_addon_full(sunpinyin
 DESC
 SOURCES ${fcitx_sunpinyin_sources}
 IM_CONFIG sunpinyin.conf
-LINK_LIBS ${SUNPINYIN_LIBRARIES} ${LIBINTL_LIBRARIES}
+LINK_LIBS PkgConfig::DBus ${SUNPINYIN_LIBRARIES} ${LIBINTL_LIBRARIES}
 )

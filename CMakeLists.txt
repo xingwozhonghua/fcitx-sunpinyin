@@ -3,30 +3,15 @@ project(fcitx-sunpinyin)
 
 set(CMAKE_MODULE_PATH "${CMAKE_CURRENT_SOURCE_DIR}/cmake" ${CMAKE_MODULE_PATH})
 
-option(ENABLE_TEST "enable function test" Off)
-
 find_package(Libintl REQUIRED)
 find_package(Fcitx 4.2.7 REQUIRED)
 find_package(Sunpinyin REQUIRED)
-find_package(DBus REQUIRED)
-find_package(Qt5DBus REQUIRED)
-find_package(Qt5LinguistTools REQUIRED)
-find_package(Qt5Quick REQUIRED)
-find_package(Qt5QuickWidgets REQUIRED)
-find_package(Qt5Widgets REQUIRED)
-
-include_directories(
-    ${Qt5DBus_INCLUDE_DIRS}
-    ${Qt5Quick_INCLUDE_DIRS}
-    ${Qt5QuickWidgets_INCLUDE_DIRS}
-    ${Qt5Widgets_INCLUDE_DIRS}
-    ${CMAKE_CURRENT_BINARY_DIR}
-    ${CMAKE_CURRENT_SOURCE_DIR})
+pkg_check_modules(DBus "dbus-1" REQUIRED IMPORTED_TARGET)
 
 _fcitx_add_uninstall_target()
 
-set(CMAKE_C_FLAGS "-Wall -Wextra -Wno-sign-compare -Wno-unused-parameter -fvisibility=hidden ${CMAKE_C_FLAGS} ${HARDENED_C_FLAGS}")
-set(CMAKE_CXX_FLAGS "-Wall -Wextra -Wno-sign-compare -Wno-unused-parameter -fvisibility=hidden ${CMAKE_CXX_FLAGS} ${HARDENED_C_FLAGS}")
+set(CMAKE_C_FLAGS "-Wall -Wextra -Wno-sign-compare -Wno-unused-parameter -fvisibility=hidden ${CMAKE_C_FLAGS}")
+set(CMAKE_CXX_FLAGS "-Wall -Wextra -Wno-sign-compare -Wno-unused-parameter -fvisibility=hidden ${CMAKE_CXX_FLAGS}")
 set(CMAKE_SHARED_LINKER_FLAGS "-Wl,--as-needed ${CMAKE_SHARED_LINKER_FLAGS}")
 set(CMAKE_MODULE_LINKER_FLAGS "-Wl,--as-needed ${CMAKE_MODULE_LINKER_FLAGS}")
 
@@ -42,9 +27,4 @@ configure_file(
 
 add_subdirectory(po)
 add_subdirectory(src)
-add_subdirectory(kimpanel)
 add_subdirectory(data)
-if(ENABLE_TEST)
-  enable_testing()
-  add_subdirectory(test)
-endif()
