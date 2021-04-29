@@ -3,6 +3,5 @@ Sunpinyin Wrapper for Fcitx.
 
 界面绘制规范案例
 不要借用fcitx原有的kimpanel接口,
-可以仿照kimpanel协议,
-在不替换输入法配置的情况下新启动一个输入法的UI,(任务栏,状态栏)
+可以仿照kimpanel协议,在不替换输入法配置的情况下新启动一个输入法的UI,(任务栏,状态栏)
 需要接口申请可以上github fcitx pr代码.
