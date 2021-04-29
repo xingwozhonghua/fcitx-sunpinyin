@@ -62,13 +62,15 @@ const char *introspection_xml =
     "  </interface>"
     "</node>";
 
+static DBusHandlerResult dBusEventHandler(DBusConnection* conn, DBusMessage* message, void* self) {
+    FcitxSunPinyinBus* bus = (FcitxSunPinyinBus*) self;
+    return bus->DimpanelDBusEventHandler(conn, message);
+}
 
-
-
-//static DBusHandlerResult dbusEventHandler(DBusConnection* conn, DBusMessage* message, void* self) {
-//    FcitxSunPinyinBus* bus = (FcitxSunPinyinBus*) self;
-//    return bus->dbusEvent(conn, message);
-//}
+static DBusHandlerResult dBusFilter(DBusConnection* conn, DBusMessage* message, void* self) {
+    FcitxSunPinyinBus* bus = (FcitxSunPinyinBus*) self;
+    return bus->DimpanelDBusFilter(conn, message);
+}
 
 static DBusHandlerResult DimpanelDBusEventHandler(DBusConnection *connection, DBusMessage *message)
 {
@@ -83,64 +85,62 @@ static DBusHandlerResult DimpanelDBusEventHandler(DBusConnection *connection, DB
     return DBUS_HANDLER_RESULT_NOT_YET_HANDLED;
 }
 
-static DBusHandlerResult DimpanelDBusFilter(DBusConnection *connection, DBusMessage *message, void* self)
+DBusHandlerResult FcitxSunPinyinBus::DimpanelDBusFilter(DBusConnection *connection, DBusMessage *message)
 {
-//    FcitxSunPinyinBus* bus = (FcitxSunPinyinBus*) self;
-
-//    FCITX_UNUSED(connection);
-//    FcitxInstance* instance = m_sunpinyin->owner;
-//    FcitxInputState* input = FcitxInstanceGetInputState(instance);
-//    int int0;
-//    const char* s0 = NULL;
-//    if (dbus_message_is_signal(message, "org.kde.impanel", "MovePreeditCaret")) {
-//        FcitxLog(DEBUG, "MovePreeditCaret");
-//        DBusError error;
-//        dbus_error_init(&error);
-//        dbus_message_get_args(message, &error, DBUS_TYPE_INT32, &int0 , DBUS_TYPE_INVALID);
-//        dbus_error_free(&error);
-//        return DBUS_HANDLER_RESULT_HANDLED;
-//    } else if (dbus_message_is_signal(message, "org.kde.impanel", "SelectCandidate")) {
-//        FcitxLog(DEBUG, "SelectCandidate: ");
-//        DBusError error;
-//        dbus_error_init(&error);
-//        if (dbus_message_get_args(message, &error, DBUS_TYPE_INT32, &int0 , DBUS_TYPE_INVALID)) {
-//            FcitxInstanceChooseCandidateByIndex(instance, int0);
-//        }
-//        dbus_error_free(&error);
-//        return DBUS_HANDLER_RESULT_HANDLED;
-//    } else if (dbus_message_is_signal(message, "org.kde.impanel", "LookupTablePageUp")) {
-//        FcitxLog(DEBUG, "LookupTablePageUp");
-//        if (FcitxCandidateWordPageCount(FcitxInputStateGetCandidateList(input)) != 0) {
-//            FcitxCandidateWordGoPrevPage(FcitxInputStateGetCandidateList(input));
-//            FcitxInstanceProcessInputReturnValue(instance, IRV_DISPLAY_CANDWORDS);
-//        }
-//        return DBUS_HANDLER_RESULT_HANDLED;
-//    } else if (dbus_message_is_signal(message, "org.kde.impanel", "LookupTablePageDown")) {
-//        FcitxLog(DEBUG, "LookupTablePageDown");
-//        if (FcitxCandidateWordPageCount(FcitxInputStateGetCandidateList(input)) != 0) {
-//            FcitxCandidateWordGoNextPage(FcitxInputStateGetCandidateList(input));
-//            FcitxInstanceProcessInputReturnValue(instance, IRV_DISPLAY_CANDWORDS);
-//        }
-//        return DBUS_HANDLER_RESULT_HANDLED;
-//    }
-//    else if (dbus_message_is_signal(message, "org.kde.impanel", "SelectTotalCandidate")) {
-//        FcitxLog(DEBUG, "SelectTotalCandidate: ");
-//        DBusError error;
-//        dbus_error_init(&error);
-//        if (dbus_message_get_args(message, &error, DBUS_TYPE_INT32, &int0, DBUS_TYPE_INVALID)) {
-//            FcitxInstanceChooseCandidateByTotalIndex(instance, int0);
-//        }
-//        dbus_error_free(&error);
-//        return DBUS_HANDLER_RESULT_HANDLED;
-//    }
-//    else if (dbus_message_is_signal(message, "org.kde.impanel", "TriggerProperty")) {
-//        FcitxLog(DEBUG, "TriggerProperty: ");
-//        DBusError error;
-//        dbus_error_init(&error);
-//        if (dbus_message_get_args(message, &error, DBUS_TYPE_STRING, &s0 , DBUS_TYPE_INVALID)) {
-//            if (strlen(s0) > strlen("/Fcitx/")) {
-//                s0 += strlen("/Fcitx/");
-//                if (strcmp("logo", s0) == 0) {
+    FCITX_UNUSED(connection);
+//    FcitxKimpanelUI* kimpanel = (FcitxKimpanelUI*) user_data;
+    FcitxInstance* instance = m_sunpinyin->owner;
+    FcitxInputState* input = FcitxInstanceGetInputState(m_sunpinyin->owner);
+    int int0;
+    const char* s0 = NULL;
+    if (dbus_message_is_signal(message, "org.sunpinyin.impanel", "MovePreeditCaret")) {
+        FcitxLog(DEBUG, "MovePreeditCaret");
+        DBusError error;
+        dbus_error_init(&error);
+        dbus_message_get_args(message, &error, DBUS_TYPE_INT32, &int0 , DBUS_TYPE_INVALID);
+        dbus_error_free(&error);
+        return DBUS_HANDLER_RESULT_HANDLED;
+    } else if (dbus_message_is_signal(message, "org.sunpinyin.impanel", "SelectCandidate")) {
+        FcitxLog(DEBUG, "SelectCandidate: ");
+        DBusError error;
+        dbus_error_init(&error);
+        if (dbus_message_get_args(message, &error, DBUS_TYPE_INT32, &int0 , DBUS_TYPE_INVALID)) {
+            FcitxInstanceChooseCandidateByIndex(instance, int0);
+        }
+        dbus_error_free(&error);
+        return DBUS_HANDLER_RESULT_HANDLED;
+    } else if (dbus_message_is_signal(message, "org.sunpinyin.impanel", "LookupTablePageUp")) {
+        FcitxLog(DEBUG, "LookupTablePageUp");
+        if (FcitxCandidateWordPageCount(FcitxInputStateGetCandidateList(input)) != 0) {
+            FcitxCandidateWordGoPrevPage(FcitxInputStateGetCandidateList(input));
+            FcitxInstanceProcessInputReturnValue(instance, IRV_DISPLAY_CANDWORDS);
+        }
+        return DBUS_HANDLER_RESULT_HANDLED;
+    } else if (dbus_message_is_signal(message, "org.sunpinyin.impanel", "LookupTablePageDown")) {
+        FcitxLog(DEBUG, "LookupTablePageDown");
+        if (FcitxCandidateWordPageCount(FcitxInputStateGetCandidateList(input)) != 0) {
+            FcitxCandidateWordGoNextPage(FcitxInputStateGetCandidateList(input));
+            FcitxInstanceProcessInputReturnValue(instance, IRV_DISPLAY_CANDWORDS);
+        }
+        return DBUS_HANDLER_RESULT_HANDLED;
+    } else if (dbus_message_is_signal(message, "org.sunpinyin.impanel", "SelectTotalCandidate")) {
+        FcitxLog(DEBUG, "SelectTotalCandidate: ");
+        DBusError error;
+        dbus_error_init(&error);
+        if (dbus_message_get_args(message, &error, DBUS_TYPE_INT32, &int0, DBUS_TYPE_INVALID)) {
+            FcitxInstanceChooseCandidateByTotalIndex(instance, int0);
+        }
+        dbus_error_free(&error);
+        return DBUS_HANDLER_RESULT_HANDLED;
+    }
+    else if (dbus_message_is_signal(message, "org.sunpinyin.impanel", "TriggerProperty")) {
+        FcitxLog(DEBUG, "TriggerProperty: ");
+        DBusError error;
+        dbus_error_init(&error);
+        if (dbus_message_get_args(message, &error, DBUS_TYPE_STRING, &s0 , DBUS_TYPE_INVALID)) {
+            if (strlen(s0) > strlen("/Fcitx/")) {
+                s0 += strlen("/Fcitx/");
+                if (strcmp("logo", s0) == 0) {
 //                    char *prop[2];
 //                    char *trans_str = ("Toggle Input Method");
 //                    fcitx_utils_alloc_cat_str(prop[0], "/Fcitx/logo/toggle:",
@@ -154,20 +154,20 @@ static DBusHandlerResult DimpanelDBusFilter(DBusConnection *connection, DBusMess
 //                    for (i = 0;i < 2;i++) {
 //                        free(prop[i]);
 //                    }
-//                } else if (strncmp("logo/", s0, strlen("logo/")) == 0) {
-//                    s0 += strlen("logo/");
-//                    if (strcmp(s0, "toggle") == 0)
-//                        FcitxInstanceChangeIMState(instance, FcitxInstanceGetCurrentIC(instance));
-//                    else if (strcmp(s0, "restart") == 0) {
-//                        FcitxInstanceRestart(instance);
-//                    }
-//                } else if (strcmp("keyboard", s0) == 0) {
-//                    FcitxInstanceCloseIM(instance,
-//                                         FcitxInstanceGetCurrentIC(instance));
-//                } else if (strncmp("im/", s0, strlen("im/")) == 0) {
-//                    s0 += strlen("im/");
-//                    FcitxInstanceSwitchIMByName(instance, s0);
-//                } else if (strncmp("im", s0, strlen("im")) == 0) {
+                } else if (strncmp("logo/", s0, strlen("logo/")) == 0) {
+                    s0 += strlen("logo/");
+                    if (strcmp(s0, "toggle") == 0)
+                        FcitxInstanceChangeIMState(instance, FcitxInstanceGetCurrentIC(instance));
+                    else if (strcmp(s0, "restart") == 0) {
+                        FcitxInstanceRestart(instance);
+                    }
+                } else if (strcmp("keyboard", s0) == 0) {
+                    FcitxInstanceCloseIM(instance,
+                                         FcitxInstanceGetCurrentIC(instance));
+                } else if (strncmp("im/", s0, strlen("im/")) == 0) {
+                    s0 += strlen("im/");
+                    FcitxInstanceSwitchIMByName(instance, s0);
+                } else if (strncmp("im", s0, strlen("im")) == 0) {
 //                    UT_array* imes = FcitxInstanceGetIMEs(instance);
 //                    FcitxIM* pim;
 //                    int index = 0;
@@ -184,19 +184,19 @@ static DBusHandlerResult DimpanelDBusFilter(DBusConnection *connection, DBusMess
 //                    while (len --)
 //                        free(prop[len]);
 //                    free(prop);
-//                } else {
-//                    /* menu */
-//                    const char* pos;
-//                    if ((pos = strchr(s0, '/'))) {
-//                        char* statusName = strndup(s0, pos - s0);
-//                        FcitxUIMenu* menup = FcitxUIGetMenuByStatusName(instance, statusName);
-//                        free(statusName);
-//                        pos ++;
-//                        int index = 0;
-//                        sscanf(pos, "%d", &index);
-//                        if (menup)
-//                            menup->MenuAction(menup, index);
-//                    } else {
+                } else {
+                    /* menu */
+                    const char* pos;
+                    if ((pos = strchr(s0, '/'))) {
+                        char* statusName = strndup(s0, pos - s0);
+                        FcitxUIMenu* menup = FcitxUIGetMenuByStatusName(instance, statusName);
+                        free(statusName);
+                        pos ++;
+                        int index = 0;
+                        sscanf(pos, "%d", &index);
+                        if (menup)
+                            menup->MenuAction(menup, index);
+                    } else {
 //                        FcitxUIMenu *menu = FcitxUIGetMenuByStatusName(instance, s0);
 //                        if (menu) {
 //                            menu->UpdateMenu(menu);
@@ -220,54 +220,54 @@ static DBusHandlerResult DimpanelDBusFilter(DBusConnection *connection, DBusMess
 //                        } else {
 //                            FcitxUIUpdateStatus(instance, s0);
 //                        }
-//                    }
-//                }
-//            }
-//        }
-//        dbus_error_free(&error);
-//        return DBUS_HANDLER_RESULT_HANDLED;
-//    } else if (dbus_message_is_signal(message, "org.kde.impanel", "PanelCreated")) {
+                    }
+                }
+            }
+        }
+        dbus_error_free(&error);
+        return DBUS_HANDLER_RESULT_HANDLED;
+    } else if (dbus_message_is_signal(message, "org.sunpinyin.impanel", "PanelCreated")) {
 //        FcitxLog(DEBUG, "PanelCreated");
 //        FcitxUIResumeFromFallback(instance);
 //        KimpanelReset();
 //        KimpanelRegisterAllStatus();
-//        return DBUS_HANDLER_RESULT_HANDLED;
-//    } else if (dbus_message_is_signal(message, "org.kde.impanel2", "PanelCreated2")) {
+        return DBUS_HANDLER_RESULT_HANDLED;
+    } else if (dbus_message_is_signal(message, "org.sunpinyin.impanel2", "PanelCreated2")) {
 //        FcitxLog(DEBUG, "PanelCreated2");
 //        FcitxUIResumeFromFallback(instance);
 //        version = 2;
 //        KimpanelReset();
 //        KimpanelRegisterAllStatus();
 //        KimpanelIntrospect();
-//        return DBUS_HANDLER_RESULT_HANDLED;
-//    } else if (dbus_message_is_signal(message, "org.kde.impanel", "Exit")) {
-//        FcitxLog(DEBUG, "Exit");
-//        FcitxInstanceEnd(instance);
-//        return DBUS_HANDLER_RESULT_HANDLED;
-//    } else if (dbus_message_is_signal(message, "org.kde.impanel", "ReloadConfig")) {
-//        FcitxLog(DEBUG, "ReloadConfig");
-//        FcitxInstanceReloadConfig(instance);
-//        return DBUS_HANDLER_RESULT_HANDLED;
-//    } else if (dbus_message_is_signal(message, "org.kde.impanel", "Restart")) {
-//        FcitxLog(DEBUG, "Restart");
-//        FcitxInstanceRestart(instance);
-//        return DBUS_HANDLER_RESULT_HANDLED;
-//    } else if (dbus_message_is_signal(message, "org.kde.impanel", "Configure")) {
-//        FcitxLog(DEBUG, "Configure");
-//        fcitx_utils_launch_configure_tool();
-//        return DBUS_HANDLER_RESULT_HANDLED;
-//    }
-//    else if (dbus_message_is_signal(message, "org.kde.impanel", "LookupTablePageSkip")) {
-//        FcitxLog(DEBUG, "LookupTablePageSkip");
-//        DBusError error;
-//        dbus_error_init(&error);
-//        if (dbus_message_get_args(message, &error, DBUS_TYPE_INT32, &int0, DBUS_TYPE_INVALID)) {
-//            FcitxCandidateWordSetPage(FcitxInputStateGetCandidateList(input), int0);
-//        }
-//        dbus_error_free(&error);
+        return DBUS_HANDLER_RESULT_HANDLED;
+    } else if (dbus_message_is_signal(message, "org.sunpinyin.impanel", "Exit")) {
+        FcitxLog(DEBUG, "Exit");
+        FcitxInstanceEnd(instance);
+        return DBUS_HANDLER_RESULT_HANDLED;
+    } else if (dbus_message_is_signal(message, "org.sunpinyin.impanel", "ReloadConfig")) {
+        FcitxLog(DEBUG, "ReloadConfig");
+        FcitxInstanceReloadConfig(instance);
+        return DBUS_HANDLER_RESULT_HANDLED;
+    } else if (dbus_message_is_signal(message, "org.sunpinyin.impanel", "Restart")) {
+        FcitxLog(DEBUG, "Restart");
+        FcitxInstanceRestart(instance);
+        return DBUS_HANDLER_RESULT_HANDLED;
+    } else if (dbus_message_is_signal(message, "org.sunpinyin.impanel", "Configure")) {
+        FcitxLog(DEBUG, "Configure");
+        fcitx_utils_launch_configure_tool();
+        return DBUS_HANDLER_RESULT_HANDLED;
+    }
+    else if (dbus_message_is_signal(message, "org.sunpinyin.impanel", "LookupTablePageSkip")) {
+        FcitxLog(DEBUG, "LookupTablePageSkip");
+        DBusError error;
+        dbus_error_init(&error);
+        if (dbus_message_get_args(message, &error, DBUS_TYPE_INT32, &int0, DBUS_TYPE_INVALID)) {
+            FcitxCandidateWordSetPage(FcitxInputStateGetCandidateList(input), int0);
+        }
+        dbus_error_free(&error);
 
-//        return DBUS_HANDLER_RESULT_HANDLED;
-//    }
+        return DBUS_HANDLER_RESULT_HANDLED;
+    }
 
     return DBUS_HANDLER_RESULT_NOT_YET_HANDLED;
 }
@@ -311,7 +311,7 @@ FcitxSunPinyinBus::FcitxSunPinyinBus(struct _FcitxSunPinyinAddonInstance* sunpin
 
         // add a rule to receive signals from kimpanel
         dbus_bus_add_match(conn,
-                           "type='signal',sender='org.kde.impanel',interface='org.kde.impanel'",
+                           "type='signal',sender='org.sunpinyin.impanel',interface='org.sunpinyin.impanel'",
                            &err);
         dbus_connection_flush(conn);
         if (dbus_error_is_set(&err)) {
@@ -319,7 +319,7 @@ FcitxSunPinyinBus::FcitxSunPinyinBus(struct _FcitxSunPinyinAddonInstance* sunpin
             break;
         }
         dbus_bus_add_match(conn,
-                           "type='signal',sender='org.kde.impanel',interface='org.kde.impanel2'",
+                           "type='signal',sender='org.sunpinyin.impanel',interface='org.sunpinyin.impanel2'",
                            &err);
         dbus_connection_flush(conn);
         if (dbus_error_is_set(&err)) {
@@ -327,25 +327,25 @@ FcitxSunPinyinBus::FcitxSunPinyinBus(struct _FcitxSunPinyinAddonInstance* sunpin
             break;
         }
 
-//        int id = FcitxDBusWatchName(instance, "org.kde.impanel", sunpinyin,
+//        int id = FcitxDBusWatchName(instance, "org.sunpinyin.impanel", sunpinyin,
 //                                    DimpanelOwnerChanged, NULL, NULL);
 //        if (id == 0) {
 //            break;
 //        }
 
-//        if (!dbus_connection_add_filter(conn, DimpanelDBusFilter, this, NULL)) {
-//            FcitxLog(ERROR, "No memory");
-//            break;
-//        }
+        if (!dbus_connection_add_filter(conn, dBusFilter, this, NULL)) {
+            FcitxLog(ERROR, "No memory");
+            break;
+        }
 
-//        DBusObjectPathVTable vtable = {NULL, &DimpanelDBusEventHandler, NULL, NULL, NULL, NULL };
+        DBusObjectPathVTable vtable = {NULL, &dBusEventHandler, NULL, NULL, NULL, NULL };
 
-//        dbus_connection_register_object_path(conn, FCITX_SUNPINYIN_PATH, &vtable, this);
+        dbus_connection_register_object_path(conn, FCITX_SUNPINYIN_PATH, &vtable, this);
 
         messageUp = FcitxMessagesNew();
         messageDown = FcitxMessagesNew();
 
-        const char* kimpanelServiceName = "org.kde.impanel";
+        const char* kimpanelServiceName = "org.sunpinyin.impanel";
         DBusMessage* message = dbus_message_new_method_call(DBUS_SERVICE_DBUS, DBUS_PATH_DBUS, DBUS_INTERFACE_DBUS, "NameHasOwner");
         dbus_message_append_args(message, DBUS_TYPE_STRING, &kimpanelServiceName, DBUS_TYPE_INVALID);
 
@@ -888,9 +888,9 @@ void FcitxSunPinyinBus::DimEnable(DBusConnection* conn, boolean toEnable)
 
 void FcitxSunPinyinBus::DimpanelOwnerChanged(const char* serviceName, const char* oldName, const char* newName) {
     /* old die and no new one */
-    if (strcmp(serviceName, "org.kde.impanel") == 0) {
+    if (strcmp(serviceName, "org.sunpinyin.impanel") == 0) {
         if (strlen(oldName) > 0 && strlen(newName) == 0) {
-            FcitxUISwitchToFallback(m_sunpinyin->owner);
+//            FcitxUISwitchToFallback(m_sunpinyin->owner);
         }
     }
 }
